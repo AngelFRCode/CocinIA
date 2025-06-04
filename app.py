@@ -1,25 +1,4 @@
-# Contenedor del chat - SIN el div que causaba el cuadrado blanco
-for i, message in enumerate(st.session_state.messages):
-    if message["role"] == "user":
-        st.markdown(f'<div class="user-message">{message["content"]}</div>', unsafe_allow_html=True)
-    else:
-        st.markdown(f'<div class="assistant-message">{message["content"]}</div>', unsafe_allow_html=True)
-        
-        # Botón de descarga para respuestas del asistente (excepto el mensaje de bienvenida)
-        if i > 0 and len(message["content"]) > 100:
-            recipe_name = f"Receta_IA_{i}"
-            recipe_content = create_recipe_download(message["content"], recipe_name)
-            
-            col1, col2, col3 = st.columns([1, 2, 1])
-            with col2:
-                st.download_button(
-                    label="📥 Descargar Receta",
-                    data=recipe_content,
-                    file_name=f"{recipe_name}.txt",
-                    mime="text/plain",
-                    key=f"download_{i}",
-                    use_container_width=True
-                )import streamlit as st
+import streamlit as st
 import requests
 import json
 from datetime import datetime
@@ -34,8 +13,8 @@ load_dotenv()
 
 # Configuración de la página
 st.set_page_config(
-    page_title="CucinaIA - Tu Chef Personal",
-    page_icon="🍝",
+    page_title="RecetasIA - Tu Asistente Personal",
+    page_icon="🍳",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
@@ -250,7 +229,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 def query_groq_api(messages, api_key):
-    """Llama a la API de Groq con prompt especializado en cocina italiana"""
+    """Llama a la API de Groq con prompt especializado en cocina"""
     try:
         url = "https://api.groq.com/openai/v1/chat/completions"
         headers = {
@@ -382,10 +361,7 @@ Puedo enseñarte desde una paella española hasta sushi japonés, tacos mexicano
         "content": welcome_msg
     })
 
-# Contenedor del chat
-st.markdown('<div class="chat-container">', unsafe_allow_html=True)
-
-# Mostrar historial del chat
+# Contenedor del chat - SIN el div que causaba el cuadrado blanco
 for i, message in enumerate(st.session_state.messages):
     if message["role"] == "user":
         st.markdown(f'<div class="user-message">{message["content"]}</div>', unsafe_allow_html=True)
@@ -394,7 +370,7 @@ for i, message in enumerate(st.session_state.messages):
         
         # Botón de descarga para respuestas del asistente (excepto el mensaje de bienvenida)
         if i > 0 and len(message["content"]) > 100:
-            recipe_name = f"Receta_CucinaIA_{i}"
+            recipe_name = f"Receta_IA_{i}"
             recipe_content = create_recipe_download(message["content"], recipe_name)
             
             col1, col2, col3 = st.columns([1, 2, 1])
@@ -407,8 +383,6 @@ for i, message in enumerate(st.session_state.messages):
                     key=f"download_{i}",
                     use_container_width=True
                 )
-
-st.markdown('</div>', unsafe_allow_html=True)
 
 # Input del usuario
 user_input = st.text_input(
